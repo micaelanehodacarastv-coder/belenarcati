@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escuela Asesores de Imagen</title>
+    
+    <!-- CDN Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --beige: #F5F2EB;
+            --negro: #2B2B2B;
+            --bordeaux: #8C1B2E;
+            --dorado: #C5A469;
+        }
+        
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-inter { font-family: 'Inter', sans-serif; }
+        
+        .bg-beige { background-color: var(--beige); }
+        .bg-negro { background-color: var(--negro); }
+        .bg-bordeaux { background-color: var(--bordeaux); }
+        .bg-dorado { background-color: var(--dorado); }
+        
+        .text-beige { color: var(--beige); }
+        .text-negro { color: var(--negro); }
+        .text-bordeaux { color: var(--bordeaux); }
+        .text-dorado { color: var(--dorado); }
+        
+        .border-bordeaux { border-color: var(--bordeaux); }
+        .hover\:bg-bordeaux:hover { background-color: var(--bordeaux); }
+        .focus\:ring-bordeaux:focus { --tw-ring-color: var(--bordeaux); }
+        
+        .module-content { display: none; }
+        .module-content.active { display: block; }
+        
+        .sidebar { height: calc(100vh - 120px); overflow-y: auto; }
+        
+        @media (max-width: 768px) {
+            .sidebar { height: auto; max-height: 300px; }
+        }
+    </style>
+</head>
+<body class="bg-beige font-inter">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex flex-col items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <div class="text-center mb-8">
+                <h1 class="font-playfair text-4xl md:text-5xl font-bold text-negro mb-4">
+                    Escuela Asesores de Imagen
+                </h1>
+                <p class="font-inter text-lg text-gray-600 mb-6">
+                    Formación integral en estilo, comunicación y presencia
+                </p>
+                <p class="font-inter text-sm text-gray-500 mb-8">
+                    Bienvenida a este recorrido transformador. En cada módulo encontrarás conocimientos y ejercicios prácticos que te ayudarán a reflejar tu esencia con autenticidad y a proyectar la mejor versión de vos misma.
+                </p>
+            </div>
+
+            <form id="loginForm" class="bg-white rounded-lg shadow-lg p-8">
+                <div class="mb-6">
+                    <label for="password" class="block font-inter font-medium text-negro mb-2">
+                        Contraseña de acceso
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bordeaux focus:border-transparent"
+                        placeholder="Ingresá tu contraseña"
+                        required
+                    />
+                </div>
+
+                <div id="loginError" class="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg font-inter text-sm hidden">
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full bg-bordeaux hover:bg-opacity-90 text-white font-inter font-semibold py-3 rounded-lg transition-colors duration-200"
+                >
+                    Acceder al curso
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="mainContent" class="hidden">
+        <!-- Header -->
+        <div class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 py-6">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <h1 class="font-playfair text-2xl md:text-3xl font-bold text-negro">
+                            Escuela Asesores de Imagen
+                        </h1>
+                        <p class="font-inter text-gray-600 mt-1">
+                            Tu progreso en el curso completo
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-4 mt-4 md:mt-0">
+                        <span id="savedIndicator" class="text-sm font-inter text-green-600 items-center gap-1 hidden">
+                            ✓ Guardado
+                        </span>
+                        <button
+                            id="exportBtn"
+                            class="bg-bordeaux hover:bg-opacity-90 text-white font-inter font-medium py-2 px-4 rounded-lg text-sm transition-colors duration-200"
+                        >
+                            Exportar Progreso (.txt)
+                        </button>
+                        <button
+                            id="logoutBtn"
+                            class="bg-gray-500 hover:bg-gray-600 text-white font-inter font-medium py-2 px-4 rounded-lg text-sm transition-colors duration-200"
+                        >
+                            Salir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 py-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Sidebar -->
+                <div class="md:col-span-1">
+                    <div class="bg-white rounded-lg shadow-sm p-6 sticky top-8 sidebar">
+                        <h2 class="font-playfair text-xl font-semibold text-negro mb-6">
+                            Contenido del Curso
+                        </h2>
+                        
+                        <!-- Progress Stats -->
+                        <div class="grid grid-cols-2 gap-4 mb-8">
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-bordeaux bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <span class="text-bordeaux font-bold">17</span>
+                                </div>
+                                <p class="font-inter text-xs text-gray-600">Módulos</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-12 h-12 bg-dorado bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-2">
+                                    <span class="text-dorado font-bold">4</span>
+                                </div>
+                                <p class="font-inter text-xs text-gray-600">Extras</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Modules -->
+                        <div class="space-y-2 mb-6">
+                            <h3 class="font-inter font-medium text-gray-600 text-sm uppercase tracking-wide">
+                                Módulos
+                            </h3>
+                            <div id="modulesList"></div>
+                        </div>
+
+                        <!-- Extras -->
+                        <div class="space-y-2">
+                            <h3 class="font-inter font-medium text-gray-600 text-sm uppercase tracking-wide">
+                                Extras Interactivos
+                            </h3>
+                            <div id="extrasList"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="md:col-span-3">
+                    <div id="welcomeScreen" class="bg-white rounded-lg shadow-sm p-8 text-center">
+                        <h2 class="font-playfair text-2xl font-semibold text-negro mb-4">
+                            ¡Bienvenida al curso!
+                        </h2>
+                        <p class="font-inter text-gray-600 mb-6">
+                            Seleccioná un módulo o extra del menú lateral para comenzar tu recorrido de aprendizaje.
+                        </p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-bordeaux bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span class="text-bordeaux font-bold text-lg">17</span>
+                                </div>
+                                <p class="font-inter text-sm text-gray-600">Módulos Completos</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-dorado bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span class="text-dorado font-bold text-lg">4</span>
+                                </div>
+                                <p class="font-inter text-sm text-gray-600">Extras Interactivos</p>
+                            </div>
+                            <div class="text-center">
+                                <div id="completedCircle" class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span id="completedCount" class="text-green-600 font-bold text-lg">0</span>
+                                </div>
+                                <p class="font-inter text-sm text-gray-600">Completados</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <span id="progressPercent" class="text-gray-600 font-bold text-lg">0%</span>
+                                </div>
+                                <p class="font-inter text-sm text-gray-600">Progreso</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Content Area -->
+                    <div id="dynamicContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Course Data
+        const courseData = {
+            modulos: [
+                {
+                    id: 1,
+                    titulo: "Imagen Personal: la llave para proyectar quién sos y quién querés ser",
+                    resumen: "La imagen personal es el conjunto de percepciones que los demás tienen sobre nosotros a través de nuestra apariencia, comunicación, actitud y presencia digital.",
+                    contenido: `¿Qué es la Imagen Personal?
+
+La imagen personal es el conjunto de percepciones que los demás tienen sobre nosotros.
+Se construye a partir de:
+👗 Apariencia
+💬 Comunicación  
+🙋‍♀️ Actitud y comportamiento
+🌐 Presencia digital
+
+"Tu imagen habla incluso antes de que digas una palabra."
+
+Importancia de la Imagen Personal
+
+La primera impresión se forma en 7 segundos.
+Influye en:
+🤝 Relaciones personales
+💼 Desarrollo profesional
+🌟 Autoestima
+🪪 Marca personal
+
+Herramientas Clave
+
+Autoconocimiento → descubrir valores, fortalezas y metas.
+Asesoría de Imagen → colorimetría, morfología, estilo.
+Comunicación efectiva → coherencia entre lo que decís y cómo lo decís.
+Presencia digital → tu huella en redes.
+
+Imagen en diferentes ámbitos
+
+Personal → refleja seguridad y autoestima.
+Profesional → abre o cierra puertas laborales.
+Digital → todo lo que mostrás online comunica.`,
+                    trabajoPractico: [
+                        "Explicá qué significa para vos \"imagen personal\" y qué mensaje querés transmitir.",
+                        "Compará tu imagen proyectada vs. percibida.",
+                        "Adaptá tu imagen en lo personal, profesional y digital.",
+                        "Caso práctico: un cliente busca credibilidad profesional. Indicá 3 recomendaciones en apariencia, comunicación y redes."
+                    ],
+                    fraseCierre: "Invertir en tu imagen es invertir en tu desarrollo personal y profesional."
+                },
+                {
+                    id: 2,
+                    titulo: "Asesoría de Imagen: una herramienta para proyectar coherencia y autenticidad",
+                    resumen: "La asesoría de imagen es un proceso personalizado que alinea la apariencia con los objetivos, valores y personalidad de cada persona.",
+                    contenido: `¿Qué es la Asesoría de Imagen?
+
+La asesoría de imagen es un proceso personalizado que alinea la apariencia con los objetivos, valores y personalidad de cada persona. No se trata solo de vestir bien, sino de comunicar un mensaje claro y consistente a través de vestimenta, lenguaje corporal, peinado, maquillaje y comunicación verbal.
+
+Objetivos principales
+
+💎 Potenciar la confianza y autoestima.
+💼 Comunicar profesionalismo y credibilidad.
+🎭 Adaptarse a distintos contextos (corporativo, social, digital).
+🌟 Reflejar autenticidad sin caer en lo artificial.
+
+Componentes de la Imagen Personal
+
+👗 Vestimenta
+🎨 Colorimetría
+💬 Lenguaje corporal
+💆‍♀️ Cuidado personal (higiene, maquillaje, peinado, accesorios)
+🗣 Comunicación verbal y no verbal
+
+Proceso de Asesoría
+
+Entrevista inicial (objetivos, estilo de vida).
+Análisis de colorimetría.
+Análisis morfológico.
+Fondo de armario.
+Planificación de estilo.
+Acompañamiento de compras.
+Seguimiento.
+
+Contextos de aplicación
+
+Corporativo → profesionalismo, códigos de vestimenta, coherencia con la empresa.
+Eventos sociales → elegancia, protocolo, adaptación a la ocasión.
+Redes sociales → coherencia visual, estética de marca, huella digital.
+
+Beneficios de la Asesoría
+
+Ahorro de tiempo y dinero.
+Refuerzo de autoestima y seguridad.
+Ventaja competitiva en lo profesional.
+Adaptabilidad en distintos contextos.
+
+Tendencias actuales
+
+🌱 Sostenibilidad | 🤝 Inclusividad | ✨ Minimalismo | 📲 Tecnología aplicada
+
+Perfil del Asesor de Imagen
+
+Conocimiento técnico (moda, color, protocolo).
+Habilidades interpersonales (empatía, escucha, motivación).
+Creatividad y ética profesional.`,
+                    trabajoPractico: [
+                        "Definí qué es la asesoría de imagen y su objetivo principal.",
+                        "Nombrá los 5 componentes básicos y ejemplificá cada uno.",
+                        "Listá las etapas del proceso de asesoría e indicá cuál sería más desafiante para vos.",
+                        "Explicá cómo adaptarías la imagen en contextos corporativos, eventos sociales y redes.",
+                        "Nombrá 3 beneficios concretos de invertir en asesoría de imagen.",
+                        "Caso práctico: Un cliente trabaja en un banco y fue invitado a una boda de noche. Recomendaciones para su imagen en ambos contextos (laboral y social)."
+                    ],
+                    fraseCierre: "La asesoría de imagen no cambia quién sos, potencia lo mejor de vos."
+                },
+                {
+                    id: 3,
+                    titulo: "Morfología Corporal: la clave para vestir con equilibrio y seguridad",
+                    resumen: "Es el estudio de las formas y proporciones del cuerpo humano para recomendar prendas que resalten fortalezas, equilibren proporciones y refuercen la confianza.",
+                    contenido: `¿Qué es la Morfología Corporal?
+
+Es el estudio de las formas y proporciones del cuerpo humano. Su objetivo es identificar patrones para recomendar prendas que:
+• Resalten fortalezas.
+• Equilibren proporciones.
+• Refuercen la confianza y comodidad personal.
+
+Importancia en la Asesoría
+
+⚖️ Armonía visual → equilibrar la silueta con la ropa.
+💎 Confianza → destacar los puntos fuertes.
+🛍️ Compras más eficientes → evita adquirir prendas que no favorecen.
+🎯 Personalización → adaptar tendencias a cada cuerpo.
+
+Factores a considerar
+
+• Proporciones (hombros, cintura, caderas).
+• Altura y longitud de extremidades.
+• Distribución de volumen corporal.
+• Postura y alineación natural.
+
+Tipos principales de morfología
+
+⏳ Reloj de arena → hombros y caderas alineados, cintura definida.
+Recomendación: vestidos entallados, cinturones, escotes en V.
+
+🍐 Triángulo (pera) → caderas más anchas que hombros.
+Recomendación: blusas con volumen, pantalones rectos.
+
+🔺 Triángulo invertido → hombros anchos, caderas estrechas.
+Recomendación: faldas voluminosas, pantalones palazzo.
+
+▭ Rectangular → hombros, cintura y caderas similares.
+Recomendación: vestidos con cinturón, cortes imperio.
+
+🍎 Ovalado → cintura más ancha que hombros y caderas.
+Recomendación: vestidos corte imperio, blusas fluidas, escotes en V.
+
+Proceso de análisis morfológico
+
+• Observación del cuerpo desde varios ángulos.
+• Entrevista sobre preferencias y objetivos.
+• Clasificación del tipo de silueta.
+• Recomendaciones de estilo personalizadas.
+• Prueba de prendas para confirmar.
+
+Consideraciones adicionales
+
+Altura: prendas monocromáticas y verticales para bajitas; estructuradas y con capas para altas.
+Tejidos y texturas: telas fluidas para ovalados, estructuradas para rectangulares.
+Estampados: rayas verticales para estilizar, estampados pequeños para cuerpos menudos.`,
+                    trabajoPractico: [
+                        "Definí qué es la morfología corporal y por qué es importante en la asesoría.",
+                        "Nombrá los 5 tipos principales con una característica y una recomendación de vestimenta.",
+                        "Identificá tu tipo de morfología (o la de alguien cercano) y explicá qué prendas favorecen y cuáles evitar.",
+                        "Listá las etapas del análisis morfológico.",
+                        "Caso aplicado: una clienta con cuerpo triángulo invertido quiere suavizar sus hombros y estilizar su silueta. Indicá 3 recomendaciones de vestimenta concretas."
+                    ],
+                    fraseCierre: "Conocer tu cuerpo es el primer paso para vestir con autenticidad y seguridad."
+                },
+                {
+                    id: 4,
+                    titulo: "Morfología Corporal Masculina: vestir para potenciar seguridad y equilibrio",
+                    resumen: "Es el estudio de las proporciones y formas del cuerpo masculino para recomendar prendas y accesorios que equilibren la silueta y resalten fortalezas.",
+                    contenido: `¿Qué es la Morfología Corporal Masculina?
+
+Es el estudio de las proporciones y formas del cuerpo masculino para recomendar prendas y accesorios que:
+• Equilibren la silueta.
+• Resalten fortalezas.
+• Proyecten una imagen coherente y segura.
+
+Importancia en la asesoría
+
+⚖️ Equilibrio visual → armoniza hombros, torso y caderas.
+💎 Confianza → un buen ajuste refuerza seguridad.
+🎯 Versatilidad → permite adaptarse a contextos laborales, sociales o casuales.
+🕑 Eficiencia → simplifica la selección de ropa.
+
+Factores clave
+
+• Proporciones (relación hombros–cintura–piernas).
+• Estilo de vida.
+• Edad y complexión.
+• Personalidad y preferencias.
+
+Tipos principales de morfología
+
+🔻 Triángulo → caderas más anchas que hombros.
+Recomendación: chaquetas estructuradas, pantalones rectos en tonos oscuros.
+
+🔺 Triángulo invertido → hombros anchos, torso atlético, caderas estrechas.
+Recomendación: prendas que equilibren volumen en la parte inferior.
+
+▭ Rectangular → hombros, cintura y caderas alineados.
+Recomendación: camisas slim, pantalones rectos, cinturones que definan.
+
+🍎 Ovalado → mayor volumen en la cintura.
+Recomendación: chaquetas entalladas, camisas con estructura, pantalones rectos oscuros.
+
+🏋️ Trapecio (atlético) → hombros anchos, cintura definida, caderas estrechas.
+Recomendación: ropa slim que resalte proporciones.
+
+Proceso de análisis morfológico
+
+• Observación.
+• Entrevista (objetivos, estilo de vida).
+• Clasificación del tipo de cuerpo.
+• Recomendaciones de vestimenta.
+• Prueba de prendas para confirmar.
+
+Consideraciones adicionales
+
+Ajuste: preferir prendas a medida.
+Colorimetría: tonos cálidos o fríos según piel.
+Texturas: tejidos estructurados para definición.
+Contexto: adaptar estilo al entorno (formal, casual, deportivo).`,
+                    trabajoPractico: [
+                        "Definí qué es la morfología corporal masculina y su importancia.",
+                        "Nombrá los 5 tipos con una característica y recomendación de vestimenta.",
+                        "Identificá la morfología de alguien cercano y explicá prendas que favorecen o conviene evitar.",
+                        "Caso aplicado: cliente con cuerpo ovalado que quiere estilizar su figura → indicá 3 recomendaciones concretas de vestimenta."
+                    ],
+                    fraseCierre: "El estilo masculino comienza con prendas que respetan tu cuerpo y potencian tu esencia."
+                },
+                {
+                    id: 5,
+                    titulo: "Visagismo: armonía facial para potenciar autenticidad y confianza",
+                    resumen: "Disciplina que estudia proporciones, formas y características del rostro para recomendar peinados, maquillaje, anteojos y accesorios que armonicen y resalten la belleza natural.",
+                    contenido: `¿Qué es el Visagismo?
+
+Disciplina que estudia proporciones, formas y características del rostro para recomendar peinados, maquillaje, anteojos y accesorios que armonicen y resalten la belleza natural.
+• Integra principios de armonía, simetría y psicología visual.
+• Objetivo → alinear la imagen facial con la personalidad y objetivos de cada persona.
+
+Importancia del visagismo
+
+⚖️ Armonía visual → accesorios y estilos equilibran proporciones.
+🪞 Refuerzo de identidad → refleja la personalidad.
+✨ Optimización de la apariencia → resalta rasgos atractivos.
+💎 Confianza personal → una imagen facial cuidada eleva la autoestima.
+
+Factores a considerar
+
+• Forma general del rostro.
+• Proporciones entre frente, pómulos y mandíbula.
+• Rasgos específicos (ojos, nariz, boca, cejas).
+• Líneas faciales: suavidad o angularidad.
+
+Tipos principales de rostro y accesorios favorecedores
+
+Ovalado → equilibrio natural, rostro "ideal".
+Favorece: anteojos cat-eye, collares en V, casi cualquier peinado.
+
+Redondo → ancho y largo similares, contornos suaves.
+Favorece: anteojos rectangulares, pendientes largos, recogidos altos.
+
+Cuadrado → mandíbula marcada, ángulos definidos.
+Favorece: anteojos redondos, pendientes curvos, peinados con ondas suaves.
+
+Alargado → más largo que ancho, frente recta.
+Favorece: peinados con volumen lateral, collares cortos.
+
+Corazón → frente amplia, barbilla puntiaguda.
+Favorece: gargantillas, pendientes anchos, anteojos grandes.
+
+Diamante → pómulos más anchos que frente y mandíbula.
+Favorece: pendientes pequeños, anteojos redondeados, flequillos ligeros.
+
+Proceso de análisis visagista
+
+• Observación del rostro (frente, perfil, ¾).
+• Entrevista sobre estilo, necesidades y objetivos.
+• Clasificación del tipo de rostro.
+• Recomendaciones (accesorios, peinado, maquillaje).
+• Prueba para confirmar lo que favorece más.
+
+Tendencias actuales
+
+• Inclusividad → diversidad de rostros y culturas.
+• Sostenibilidad → accesorios ecológicos.
+• Tecnología → apps de análisis facial.
+• Personalización → accesorios únicos y hechos a medida.`,
+                    trabajoPractico: [
+                        "Definí qué es el visagismo y por qué es importante.",
+                        "Nombrá los 6 tipos principales de rostro con una característica y accesorio favorecedor.",
+                        "Identificá tu tipo de rostro (o el de alguien cercano) y describí qué accesorios/peinados favorecen y cuáles evitar.",
+                        "Caso aplicado: una clienta con rostro redondo quiere estilizarlo. Indicá 3 recomendaciones concretas de accesorios o peinado."
+                    ],
+                    fraseCierre: "El rostro es tu carta de presentación: conocelo, potenciá tu esencia y reflejá tu autenticidad."
+                },
+                {
+                    id: 6,
+                    titulo: "Visagismo Masculino: armonía y estilo adaptados a cada rostro",
+                    resumen: "Disciplina que analiza proporciones, formas y características del rostro masculino para recomendar peinados, estilos de barba, anteojos y accesorios que armonicen y potencien la apariencia.",
+                    contenido: `¿Qué es el Visagismo Masculino?
+
+Disciplina que analiza proporciones, formas y características del rostro masculino para recomendar peinados, estilos de barba, anteojos y accesorios que armonicen y potencien la apariencia.
+• Se centra en contorno, proporciones (frente, pómulos, mandíbula) y rasgos distintivos.
+• Busca reflejar identidad, reforzar la confianza y adaptarse al contexto (laboral, social o casual).
+
+Importancia
+
+⚖️ Armonía visual → equilibra proporciones faciales.
+👤 Expresión de identidad → refleja personalidad y estilo de vida.
+💎 Confianza → una imagen facial bien diseñada refuerza la autoestima.
+🔄 Adaptabilidad → estilos adecuados para diferentes contextos.
+
+Factores clave
+
+• Forma del rostro.
+• Tono de piel (colorimetría en accesorios y monturas).
+• Estilo de vida (formal, casual, creativo).
+• Edad y personalidad.
+
+Tipos principales de rostro y recomendaciones
+
+Ovalado → rostro equilibrado.
+Favorece: peinados cortos a los lados, barba recortada, anteojos rectangulares.
+
+Cuadrado → mandíbula marcada y líneas angulares.
+Favorece: peinados con textura, barbas medias que suavicen, anteojos redondos.
+
+Redondo → ancho y largo similares, contornos suaves.
+Favorece: peinados con volumen arriba, barba angular o perilla, anteojos rectangulares.
+
+Alargado (rectangular) → rostro más largo que ancho.
+Favorece: flequillo lateral, barba completa, monturas grandes o aviador.
+
+Corazón → frente ancha y barbilla estrecha.
+Favorece: barba completa, anteojos ovalados o sin marco inferior, peinados con volumen lateral.
+
+Diamante → pómulos anchos, frente y barbilla estrechas.
+Favorece: barba media, anteojos ovalados, cortes con volumen superior.
+
+Proceso de análisis visagista
+
+• Observación → frente y perfil.
+• Entrevista → estilo de vida, objetivos.
+• Clasificación → determinar tipo de rostro.
+• Recomendaciones → peinado, barba, anteojos, accesorios.
+• Prueba → testear estilos hasta confirmar el más favorecedor.
+
+Consideraciones adicionales
+
+• Cuidado personal → piel y barba saludables.
+• Colorimetría → accesorios según subtono de piel.
+• Contexto → estilos distintos para trabajo, ocio o eventos.
+• Tendencias → integrar novedades sin perder armonía.`,
+                    trabajoPractico: [
+                        "Definí qué es el visagismo masculino y por qué es importante.",
+                        "Nombrá los 6 tipos de rostro con una característica clave y recomendación (peinado, barba, anteojos).",
+                        "Identificá el tipo de rostro de alguien cercano y describí qué estilos le favorecen y cuáles evitar.",
+                        "Explicá cómo influyen el cuidado personal, la colorimetría y el contexto en la elección del estilo.",
+                        "Caso aplicado: un cliente con rostro cuadrado quiere suavizar sus facciones. Indicá 3 recomendaciones concretas de peinado o barba."
+                    ],
+                    fraseCierre: "La verdadera elegancia masculina comienza con un rostro cuidado y un estilo que potencie lo mejor de vos."
+                },
+                {
+                    id: 7,
+                    titulo: "Accesorios: detalles que equilibran, transforman y proyectan tu esencia",
+                    resumen: "Los accesorios son elementos clave que equilibran proporciones corporales y faciales, crean puntos focales, expresan personalidad y aportan versatilidad a cualquier outfit.",
+                    contenido: `Importancia de los accesorios
+
+⚖️ Equilibrio visual → compensan proporciones corporales y faciales.
+🎯 Puntos focales → dirigen la atención a zonas estratégicas.
+👤 Expresión de personalidad → reflejan estilo único.
+🔄 Versatilidad → un mismo outfit cambia según accesorios.
+
+Factores clave a considerar
+
+• Proporción → accesorios proporcionales al cuerpo y rostro.
+• Color → armonía con paleta personal (fríos o cálidos).
+• Textura/material → metálicos para sofisticación, naturales para lo casual.
+• Contexto → laboral, social, diario.
+
+Accesorios según morfología corporal
+
+Reloj de arena → equilibrio natural.
+✔ Favorece: cinturones finos/medianos, bolsos medianos, pendientes delicados.
+❌ Evitar: accesorios que rompan la armonía de cintura definida.
+
+Triángulo (pera) → caderas anchas.
+✔ Favorece: collares llamativos, pendientes grandes, bolsos cerca del torso.
+❌ Evitar: bolsos a la altura de caderas.
+
+Triángulo invertido → hombros anchos, caderas estrechas.
+✔ Favorece: cinturones anchos en la cadera, collares largos en V.
+❌ Evitar: collares cortos o voluminosos en el cuello.
+
+Rectangular → silueta recta.
+✔ Favorece: cinturones anchos con detalles, bolsos curvos, collares medianos.
+❌ Evitar: accesorios rectos/minimalistas que refuercen linealidad.
+
+Ovalado → cintura ancha, abdomen voluminoso.
+✔ Favorece: collares largos, bolsos cruzados largos, sombreros de ala ancha.
+❌ Evitar: cinturones anchos en el abdomen, bolsos pequeños en la cintura.
+
+Accesorios según tipo de rostro
+
+Ovalado → equilibrio natural.
+✔ Favorece: anteojos cat-eye, pendientes largos y finos, collares en V.
+
+Redondo → contornos suaves, proporción ancho/largo similar.
+✔ Favorece: anteojos rectangulares, pendientes largos, collares en V.
+
+Cuadrado → mandíbula marcada, ángulos definidos.
+✔ Favorece: anteojos redondos/ovalados, pendientes curvos, collares largos.
+
+Alargado → rostro más largo que ancho.
+✔ Favorece: gargantillas, pendientes anchos, anteojos grandes.
+
+Corazón → frente amplia, barbilla estrecha.
+✔ Favorece: gargantillas, pendientes triangulares invertidos, anteojos cat-eye.
+
+Diamante → pómulos anchos, barbilla y frente estrechas.
+✔ Favorece: pendientes pequeños, collares medianos, anteojos ovalados.
+
+Integración cuerpo + rostro
+
+Para un look armónico:
+• Cuerpos menudos → accesorios pequeños/discretos.
+• Cuerpos robustos o altos → accesorios grandes/voluminosos.
+• Rostros pequeños → anteojos/aros delicados.
+• Rostros grandes → accesorios oversized.
+
+Tendencias actuales
+
+🌱 Sostenibilidad → accesorios de materiales reciclados.
+✨ Minimalismo → formas simples y geométricas.
+🎨 Personalización → piezas hechas a medida o con iniciales.`,
+                    trabajoPractico: [
+                        "Explicá en 5 a 7 líneas por qué los accesorios son clave en la asesoría de imagen.",
+                        "Nombrá los 5 tipos de cuerpo y un accesorio favorecedor y uno a evitar en cada caso.",
+                        "Nombrá los 6 tipos de rostro y un accesorio que favorezca a cada uno.",
+                        "Identificá tu tipo de cuerpo y rostro (o el de alguien cercano) y describí qué accesorios favorecen y cuáles no.",
+                        "Explicá cómo influyen proporción, color y textura en la elección de accesorios.",
+                        "Caso aplicado: clienta con cuerpo triángulo y rostro redondo → 3 recomendaciones de accesorios para estilizar la figura y alargar el rostro."
+                    ],
+                    fraseCierre: "Los accesorios correctos no son un detalle: son el toque que transforma y potencia tu imagen."
+                },
+                {
+                    id: 8,
+                    titulo: "Colorimetría: descubrir tu paleta es iluminar tu esencia",
+                    resumen: "Disciplina que analiza piel, cabello y ojos para identificar la paleta de colores que más favorece, basándose en temperatura, intensidad y contraste.",
+                    contenido: `¿Qué es la Colorimetría?
+
+Disciplina que analiza piel, cabello y ojos para identificar la paleta de colores que más favorece.
+• Se basa en temperatura (cálido/frío), intensidad y contraste.
+• Busca armonía visual, realzar la piel y reflejar personalidad.
+
+Importancia
+
+🌟 Armonía visual → piel luminosa y saludable.
+💎 Confianza personal → colores favorecedores elevan autoestima.
+⏱️ Eficiencia → evita compras equivocadas.
+🔄 Versatilidad → adapta tendencias a cada persona.
+
+Factores clave
+
+• Subtono de piel (cálido, frío, neutro).
+• Color de cabello (reflejos cálidos o fríos).
+• Color de ojos (intensidad y contraste).
+• Nivel de contraste general.
+
+Paletas principales
+
+Cálida
+Características: subtonos dorados o amarillentos, cabello con reflejos miel/rojizos, ojos avellana o marrón cálido.
+Colores: tierra, naranjas, verdes oliva, dorados.
+
+Fría  
+Características: subtonos rosados o azulados, cabello ceniza o negro azulado, ojos azules o grises.
+Colores: tonos joya (azul marino, esmeralda), lilas, rosas suaves, plateados.
+
+El método de las cuatro estaciones
+
+❄️ Invierno → tonos fríos, intensos, alto contraste (negro, fucsia, azul eléctrico).
+🌸 Verano → tonos fríos y suaves (pasteles, grises claros, azul cielo).
+🍂 Otoño → tonos cálidos, medios o profundos (terracota, mostaza, verde oliva).
+🌼 Primavera → tonos cálidos, vibrantes y luminosos (coral, turquesa, amarillo claro).
+
+Métodos avanzados
+
+• 12 estaciones → subdivisiones más precisas dentro de cada estación.
+• Método tonal → se enfoca en temperatura (cálido/frío) e intensidad (suave, brillante, profunda).
+
+Combinaciones de colores
+
+• Monocromática → un solo color en varias intensidades (ejemplo: distintos tonos de azul marino).
+• Análoga → colores cercanos en la rueda (ejemplo: terracota, naranja, mostaza).
+• Complementaria → opuestos en la rueda (ejemplo: azul + naranja).
+• Tríada → tres equidistantes (ejemplo: rojo, azul, amarillo).
+• Tétrada → dos pares de opuestos (ejemplo: azul, rojo, verde, naranja).
+
+El test de colorimetría
+
+• Preparación: luz natural, paños de colores, cliente sin maquillaje.
+• Observación: subtono de piel, cabello y ojos.
+• Prueba con paños cálidos y fríos.
+• Determinación de estación/subestación.
+• Entrega de paleta personalizada para ropa, maquillaje y accesorios.`,
+                    trabajoPractico: [
+                        "Definí qué es la colorimetría y por qué es esencial.",
+                        "Nombrá las dos paletas básicas (cálida y fría) con ejemplo de características y colores.",
+                        "Elegí una estación y describí sus características y colores recomendados.",
+                        "Identificá tu propia paleta (cálida o fría) y explicá qué colores favorecen tu piel, ojos y cabello.",
+                        "Explicá qué es una combinación monocromática y una complementaria, y en qué contexto usarías cada una.",
+                        "Caso aplicado: clienta con piel dorada, cabello castaño rojizo y ojos avellana → 3 recomendaciones de colores para ropa y accesorios."
+                    ],
+                    fraseCierre: "Tus colores son tu energía: elegilos bien y reflejarás luz en cada paso."
+                },
+                {
+                    id: 9,
+                    titulo: "El estilo es la huella visual de tu personalidad",
+                    resumen: "El estilo es la combinación de prendas, accesorios, colores, texturas y actitudes que reflejan la identidad de una persona, más allá de las tendencias.",
+                    contenido: `¿Qué es el Estilo en Asesoría de Imagen?
+
+El estilo es la combinación de prendas, accesorios, colores, texturas y actitudes que reflejan la identidad de una persona.
+• No es solo seguir tendencias, sino crear una narrativa visual auténtica y funcional.
+• Sirve como base para un guardarropas coherente y versátil.
+
+Importancia
+
+💬 Comunicación no verbal → transmite personalidad, profesionalismo y valores.
+💎 Confianza personal → refuerza autoestima y seguridad.
+🔄 Adaptabilidad → se ajusta a diferentes contextos sin perder autenticidad.
+⏱️ Eficiencia → facilita armar outfits.
+
+Factores a considerar
+
+• Personalidad.
+• Estilo de vida.
+• Morfología y colorimetría.
+• Objetivos personales y profesionales.
+
+Los 7 estilos universales
+
+Clásico → elegancia atemporal, prendas estructuradas, colores neutros.
+Prenda clave: traje sastre.
+
+Natural → comodidad, simplicidad, tejidos suaves, colores tierra.
+Prenda clave: jeans + camiseta básica.
+
+Romántico → suavidad, feminidad, encajes, volados, tonos pasteles.
+Prenda clave: vestido floral.
+
+Dramático → audacia, impacto, cortes arquitectónicos, colores intensos.
+Prenda clave: chaqueta estructurada o vestido asimétrico.
+
+Creativo → eclecticismo, mezcla de texturas y estampas.
+Prenda clave: pieza artesanal o vintage.
+
+Elegante → sofisticación, minimalismo, tejidos lujosos, monocromía.
+Prenda clave: vestido negro midi.
+
+Deportivo → funcionalidad, dinamismo, inspiración atlética.
+Prenda clave: leggings y zapatillas.
+
+Otros estilos relevantes
+
+• Boho → libertad, estampados étnicos, tejidos naturales.
+• Preppy → inspiración universitaria, patrones clásicos (rayas, cuadros).
+• Gótico → estética oscura, cuero, terciopelo, accesorios plateados.
+• Minimalista → líneas simples, colores neutros, prendas versátiles.
+• Streetwear → influencia urbana, oversize, cultura hip-hop/skate.
+• Vintage/Retro → inspirado en décadas pasadas, piezas icónicas.
+
+Combinación de estilos
+
+En la práctica, pocas personas siguen un único estilo. La clave es mezclar para lograr un look personal y coherente:
+• Clásico + Romántico → traje sastre con blusa de volados.
+• Natural + Boho → jeans con vestido boho y botas.
+• Dramático + Streetwear → chaqueta de cuero oversize con zapatillas chunky.
+
+Tendencias actuales
+
+🌱 Moda ética y sostenible.
+🤝 Inclusividad → diversidad de cuerpos y culturas.
+📲 Tecnología → apps de estilismo virtual.
+🔄 Hibridación → fusión de estilos (ej: athleisure + elegante).`,
+                    trabajoPractico: [
+                        "Definí qué es el estilo y por qué es fundamental.",
+                        "Nombrá los 7 estilos universales con una característica y prenda clave.",
+                        "Mencioná al menos 3 estilos adicionales y qué los distingue.",
+                        "Identificá tu estilo predominante (o el de alguien cercano) y qué prendas/accesorios lo representan.",
+                        "Explicá cómo se pueden mezclar dos estilos para un look coherente.",
+                        "Caso aplicado: un cliente quiere proyectar profesionalismo en el trabajo pero creatividad en lo social → proponé un look para cada contexto."
+                    ],
+                    fraseCierre: "El estilo es tu manera de decirle al mundo quién sos, sin necesidad de palabras."
+                },
+                {
+                    id: 10,
+                    titulo: "Vestirse según el código es un acto de respeto y proyección personal",
+                    resumen: "Los códigos de vestimenta son normas sociales y culturales que indican cómo vestir según ocasión, hora, lugar y contexto, garantizando adecuación y respeto.",
+                    contenido: `¿Qué son los códigos de vestimenta?
+
+Son un conjunto de normas sociales y culturales que indican cómo vestir según ocasión, hora, lugar y contexto.
+• Garantizan adecuación.
+• Reflejan respeto hacia anfitriones y asistentes.
+• Proyectan coherencia, profesionalismo y estilo.
+
+Importancia
+
+💼 Transmiten profesionalismo.
+🎭 Adaptan la imagen a cada evento.
+💎 Refuerzan la identidad personal.
+🤝 Evitan errores de etiqueta.
+
+Tipos principales de códigos
+
+• Formal / Gala → vestidos largos, trajes oscuros, accesorios finos.
+• Semiformal → vestidos de cóctel, trajes claros.
+• Informal elegante (smart casual) → jeans oscuros, blazers, vestidos casual chic.
+• Casual → jeans, remeras, prendas cómodas.
+• Negocios → business formal (traje completo) o business casual (pantalón de vestir + blusa).
+• Fiesta / Temático → atuendos creativos, coloridos, accesorios llamativos.
+• Deportivo → ropa cómoda, ligada a actividades físicas.
+• Cultural → vestimenta adaptada a teatro, conciertos, tradiciones.
+• Aire libre → ropa ligera o funcional, adaptada al clima.
+
+Vestimenta en bodas
+
+• Novia → vestido largo, corto o bohemio según el tipo de boda.
+• Novio → traje oscuro, claro o de lino (según formalidad/lugar).
+• Invitados → deben seguir el código (ej: boda de playa → vestidos fluidos, trajes de lino).
+
+Etiqueta básica
+
+✔ Colores adecuados → evitar blanco en bodas y negro en celebraciones (salvo excepciones).
+✔ Ajuste → ropa ni demasiado holgada ni ajustada.
+✔ Accesorios → simples y elegantes en formal; llamativos en casual.
+❌ Errores frecuentes: ropa arrugada, medias blancas con traje, exceso de estampados.
+
+Consideraciones culturales
+
+La vestimenta refleja valores y tradiciones. Siempre verificar usos según el país o región.
+
+Consejos prácticos
+
+• Confirmar el código en la invitación.
+• Llevar prenda extra (chal, chaqueta).
+• Planchar y preparar la ropa antes.
+• Probar el atuendo completo con antelación.`,
+                    trabajoPractico: [
+                        "Definí qué son los códigos de vestimenta y su importancia.",
+                        "Nombrá los principales códigos con un ejemplo de vestimenta en cada uno.",
+                        "Explicá diferencias de vestimenta en bodas (novia, novio e invitados).",
+                        "Nombrá 3 reglas básicas de etiqueta y 2 errores frecuentes a evitar.",
+                        "Caso aplicado: cliente con entrevista laboral en banco + boda en la playa → 3 recomendaciones para cada evento."
+                    ],
+                    fraseCierre: "Vestirse según el código no limita tu estilo, lo potencia en el contexto correcto."
+                },
+                {
+                    id: 11,
+                    titulo: "El arte de armar looks: vestir con coherencia, estilo y autenticidad",
+                    resumen: "Es la combinación de prendas, accesorios y calzado para crear conjuntos que reflejen la personalidad, el estilo personal y la ocasión, comunicando identidad.",
+                    contenido: `¿Qué es el armado de looks?
+
+Es la combinación de prendas, accesorios y calzado para crear conjuntos que reflejen la personalidad, el estilo personal y la ocasión.
+• No es solo estética: comunica identidad.
+• Un look bien armado aumenta la confianza y mejora la percepción social.
+
+Elementos básicos
+
+👗 Prendas de vestir → la base del look.
+💍 Accesorios → complementan y elevan la propuesta.
+👠 Calzado → define formalidad y funcionalidad.
+
+Principios del armado de looks
+
+⚖️ Equilibrio y proporción → ejemplo: blusa oversize con pantalón ajustado.
+🎨 Color y textura → usar contrastes, armonías o monocromías.
+🌟 Estilo personal → clásico, boho, dramático, minimalista… lo que refleje tu identidad.
+
+Armado de looks según ocasión
+
+• Casual → jeans + remera básica + zapatillas + accesorios simples.
+• Trabajo → traje sastre con blusa + zapatos formales + bolso estructurado.
+• Formal → vestido largo de seda + clutch metálico + tacos + joyería fina.
+
+Consejos prácticos
+
+• Planificar el armario → agrupar prendas por tipo y color.
+• Aplicar teoría del color → análogos para armonía, complementarios para contraste.
+• Incorporar tendencias sin perder estilo personal.
+• Probar combinaciones antes de eventos importantes.
+
+Ejemplos
+
+• Look casual fin de semana → camiseta blanca + jeans azules + zapatillas + gorra.
+• Look entrevista de trabajo → blusa de seda + pantalón negro + blazer + tacos bajos.
+• Look cena formal → vestido terciopelo burdeos + clutch plateado + pendientes perlas.`,
+                    trabajoPractico: [
+                        "Definí qué significa \"armado de looks\" y su importancia.",
+                        "Nombrá los 3 componentes clave (prendas, accesorios, calzado) y explicá cómo influyen.",
+                        "Mencioná los 3 principios principales (equilibrio y proporción, color y textura, estilo personal) con ejemplo práctico.",
+                        "Caso aplicado: cliente con entrevista laboral por la mañana y cena formal a la noche → proponé un look para cada ocasión."
+                    ],
+                    fraseCierre: "Tu look habla por vos: combiná piezas con intención y contarás tu historia sin palabras."
+                },
+                {
+                    id: 12,
+                    titulo: "Un armario ordenado refleja una mente clara y un estilo auténtico",
+                    resumen: "Es un proceso estratégico que evalúa, organiza y depura el contenido del armario para eliminar lo innecesario, conservar lo funcional y optimizar espacio y tiempo.",
+                    contenido: `¿Qué es el detox de guardarropas?
+
+Es un proceso estratégico que evalúa, organiza y depura el contenido del armario para:
+• Eliminar prendas innecesarias.
+• Conservar piezas funcionales y favorecedoras.
+• Optimizar espacio y tiempo.
+• Promover un consumo consciente y sostenible.
+
+Importancia
+
+⏱️ Ahorra tiempo al vestirse.
+💎 Refuerza la confianza y la claridad en el estilo.
+🌱 Reduce el consumo impulsivo y fomenta sostenibilidad.
+🧘 Mejora el bienestar emocional al eliminar desorden.
+
+Factores a considerar
+
+• Estilo de vida.
+• Morfología corporal.
+• Colorimetría.
+• Espacio disponible.
+• Objetivos personales.
+
+Proceso de detox
+
+• Preparación → definir objetivo, tiempo y materiales.
+• Evaluación inicial → vaciar armario, clasificar y revisar prendas.
+• Selección → conservar, reparar/modificar, eliminar/donar/reciclar.
+• Decisiones sobre eliminación → donar, reciclar, vender, reutilizar.
+• Organización → clasificar por tipo/color, usar perchas y cajas.
+• Creación de fondo de armario → identificar básicos faltantes.
+• Planificación → fotos de outfits, guía de combinaciones.
+
+Estrategias de mantenimiento
+
+• Revisión periódica cada 6-12 meses.
+• Regla de entrada y salida.
+• Cuidado correcto de prendas.
+• Consumo consciente.
+
+Beneficios
+
+• Armario funcional y coherente.
+• Reducción de estrés y gasto innecesario.
+• Alineación de la imagen personal con objetivos.
+
+Tendencias actuales
+
+• Guardarropas cápsula (20-30 prendas clave).
+• Sostenibilidad y segunda mano.
+• Apps de organización de prendas.
+• Inclusividad y adaptación cultural.`,
+                    trabajoPractico: [
+                        "Definí qué es el detox de guardarropas y su importancia.",
+                        "Resumí las etapas principales (preparación, evaluación, selección, eliminación, organización, fondo de armario y planificación).",
+                        "Realizá un mini-detox personal: 3 prendas para conservar, 2 para reparar y 2 para donar/reciclar, explicando por qué.",
+                        "Explicá 2 estrategias para mantener el orden.",
+                        "Caso aplicado: cliente quiere un guardarropas más minimalista y profesional → 3 recomendaciones concretas de organización y selección de prendas."
+                    ],
+                    fraseCierre: "Un armario limpio abre espacio a nuevas versiones de vos misma."
+                },
+                {
+                    id: 13,
+                    titulo: "Un buen fondo de armario es la base de una imagen auténtica, versátil y atemporal",
+                    resumen: "Es la colección de prendas esenciales, versátiles y atemporales que forman la base de un guardarropas funcional, compuesta de piezas de calidad y fáciles de combinar.",
+                    contenido: `¿Qué es el Fondo de Armario?
+
+Es la colección de prendas esenciales, versátiles y atemporales que forman la base de un guardarropas funcional.
+• Se compone de piezas de calidad, fáciles de combinar.
+• No depende de tendencias pasajeras.
+• Se adapta a múltiples contextos (profesional, casual, social).
+
+Importancia
+
+🌟 Versatilidad → permite crear muchos outfits con pocas prendas.
+💰 Ahorro económico → evita compras impulsivas y prioriza calidad.
+🌱 Sostenibilidad → fomenta consumo consciente y reduce el impacto ambiental.
+🧘 Coherencia y bienestar → un armario depurado refleja estilo claro y reduce el estrés.
+
+Factores a considerar
+
+• Estilo de vida.
+• Morfología corporal.
+• Colorimetría.
+• Presupuesto.
+• Personalidad y preferencias.
+
+Componentes principales
+
+Prendas superiores: camisa blanca, blusa neutra, camiseta básica, blazer, jersey.
+Prendas inferiores: pantalón de vestir, jeans oscuros, falda lápiz/A.
+Abrigos: trench, chaqueta de cuero, abrigo clásico.
+Vestidos (mujeres): vestido negro, vestido camisero.
+Calzado: zapatos formales, zapatillas blancas, botas negras.
+Accesorios: cinturón, bolso versátil, bufanda, reloj clásico, joyería básica.
+
+Cantidad recomendada → entre 20 y 30 piezas.
+
+Cómo construirlo
+
+• Evaluar estilo de vida y guardarropa actual.
+• Definir paleta de colores (base neutra + acentos).
+• Seleccionar prendas atemporales y de calidad.
+• Incorporar accesorios versátiles.
+• Probar combinaciones para confirmar versatilidad.
+
+Mantenimiento
+
+• Revisar armario cada 6-12 meses.
+• Cuidar las prendas (lavado, planchado, reparaciones).
+• Reemplazar piezas desgastadas.
+• Evitar compras impulsivas → priorizar calidad.
+
+Adaptación a contextos
+
+• Corporativo → blazer + camisa blanca + pantalón de vestir + mocasines.
+• Casual → jeans + camiseta básica + zapatillas blancas.
+• Semi-formal → vestido negro + tacos + clutch + joyería fina.`,
+                    trabajoPractico: [
+                        "Definí qué es el fondo de armario y su importancia.",
+                        "Nombrá 3 beneficios concretos (versatilidad, ahorro, sostenibilidad).",
+                        "Listá al menos 5 prendas o accesorios esenciales.",
+                        "Caso personal: 3 prendas que funcionarían como fondo, 1 a reparar y 2 a eliminar/donar.",
+                        "Caso aplicado: clienta que busca un fondo de armario profesional y minimalista → 3 recomendaciones de prendas/accesorios clave."
+                    ],
+                    fraseCierre: "Invertir en tu fondo de armario es invertir en una imagen sólida y coherente en cualquier ocasión."
+                },
+                {
+                    id: 14,
+                    titulo: "El personal shopper: compras inteligentes para un estilo auténtico",
+                    resumen: "Profesional especializado en asesoría de imagen que guía al cliente en la selección y compra de prendas, accesorios y calzado para crear un guardarropas funcional y coherente.",
+                    contenido: `¿Qué es un Personal Shopper?
+
+Profesional especializado en asesoría de imagen que guía al cliente en la selección y compra de prendas, accesorios y calzado para crear un guardarropas funcional, coherente y alineado con su estilo de vida.
+• Puede trabajar en tiendas físicas, online o combinando ambos.
+• Su objetivo es optimizar tiempo, presupuesto y potenciar la confianza del cliente.
+
+Importancia
+
+⏱️ Ahorro de tiempo → simplifica el proceso de compra.
+🎯 Personalización → adapta elecciones a morfología, colorimetría y objetivos.
+💎 Confianza → seguridad al decidir qué comprar.
+💰 Eficiencia económica → evita compras impulsivas.
+✨ Acceso a tendencias → conocimiento actualizado del mercado.
+
+Perfil del Personal Shopper
+
+• Conocimientos técnicos → moda, morfología, colorimetría, tendencias, marcas.
+• Habilidades blandas → escucha activa, empatía, comunicación efectiva, persuasión.
+• Creatividad → generar propuestas únicas.
+• Ética profesional → respetar presupuesto y preferencias del cliente.
+
+Funciones principales
+
+• Evaluación de necesidades → entrevista inicial, objetivos, presupuesto.
+• Planificación de compras → definir plan, priorizar prendas clave.
+• Selección de prendas → opciones físicas u online, propuestas de outfits.
+• Asesoramiento en probadores → ajuste, proporciones, paleta de colores.
+• Seguimiento y actualización → integración de nuevas prendas + guías de estilo.
+
+Proceso de trabajo
+
+• Entrevista inicial.
+• Análisis del guardarropas.
+• Investigación y preselección.
+• Sesión de compras (física u online).
+• Entrega de guía de estilo personalizada.
+• Seguimiento posterior.
+
+Beneficios para el cliente
+
+• Armario optimizado.
+• Imagen coherente y auténtica.
+• Compras inteligentes y duraderas.
+• Refuerzo de confianza y seguridad.
+
+Tendencias actuales
+
+🌱 Sostenibilidad → marcas éticas, segunda mano.
+📲 Compras online → apps de prueba virtual.
+🤝 Inclusividad → adaptación a todas las morfologías.
+💡 Tecnología → plataformas digitales de estilismo.`,
+                    trabajoPractico: [
+                        "Definí qué es un personal shopper y su objetivo principal.",
+                        "Nombrá 3 habilidades técnicas y 3 blandas necesarias.",
+                        "Describí brevemente funciones: evaluación, planificación, selección, asesoría y seguimiento.",
+                        "Listá etapas del proceso de trabajo.",
+                        "Nombrá 3 beneficios concretos para el cliente.",
+                        "Caso aplicado: cliente con presupuesto limitado que debe renovar su guardarropas laboral → 3 recomendaciones de compras inteligentes."
+                    ],
+                    fraseCierre: "Un personal shopper no solo elige ropa: diseña confianza, estilo y autenticidad."
+                },
+                {
+                    id: 15,
+                    titulo: "Viajar liviano, funcional y con estilo también es parte de tu imagen",
+                    resumen: "Es la habilidad de planificar, seleccionar y organizar prendas, accesorios y artículos personales para un viaje, considerando destino, clima, duración, actividades y estilo personal.",
+                    contenido: `¿Qué es el Armado de Valijas?
+
+Es la habilidad de planificar, seleccionar y organizar prendas, accesorios y artículos personales para un viaje.
+• Considera destino, clima, duración, actividades y estilo personal.
+• Su meta es crear un guardarropas de viaje compacto y versátil, que proyecte coherencia y confianza en cualquier contexto.
+
+Importancia
+
+⏱️ Eficiencia → optimiza espacio y peso del equipaje.
+🎯 Versatilidad → múltiples outfits con pocas prendas.
+💎 Imagen coherente → adecuada al contexto (negocios, ocio, eventos).
+💰 Ahorro económico → evita exceso de equipaje y compras innecesarias.
+🌱 Sostenibilidad → fomenta consumo responsable y minimalismo.
+
+Factores a considerar
+
+• Destino y clima.
+• Duración del viaje.
+• Actividades previstas.
+• Morfología y colorimetría personal.
+• Restricciones de equipaje.
+
+Proceso de armado
+
+• Planificación del viaje → investigar clima, actividades y códigos de vestimenta.
+• Selección de prendas → basarse en fondo de armario, elegir neutros y piezas versátiles.
+• Organización y empaque → técnicas como enrollar ropa, usar bolsas organizadoras.
+• Artículos personales y esenciales → documentos, higiene, electrónicos, medicamentos.
+• Revisión final → peso, tamaño y outfits completos confirmados.
+
+Lista básica para 5-7 días
+
+• Superiores: 3-4 camisetas/camisas, 1-2 sweaters, 1 blazer.
+• Inferiores: 2-3 pantalones/jeans, 1 falda (opcional).
+• Abrigo: 1 chaqueta ligera/abrigo.
+• Vestidos: 1-2 versátiles (si aplica).
+• Calzado: 2-3 pares (zapatillas, zapatos formales, botas/sandalias).
+• Accesorios: cinturón, bufanda, bolso pequeño, joyería básica.
+• Otros: ropa interior, pijama, artículos de higiene.
+
+Consejos prácticos
+
+• Enrollar ropa para ahorrar espacio y evitar arrugas.
+• Usar accesorios para transformar un look básico.
+• Priorizar tejidos que no se arruguen fácilmente.
+• Guardar objetos pequeños dentro de zapatos.
+• Llevar un outfit de emergencia.
+
+Beneficios
+
+• Ahorro de tiempo y espacio.
+• Imagen cuidada en todo contexto.
+• Viajes más organizados y sin estrés.
+
+Tendencias actuales
+
+• Guardarropas cápsula de viaje.
+• Apps de listas inteligentes (ej: PackPoint).
+• Accesorios multifuncionales.
+• Sostenibilidad y prendas eco-friendly.`,
+                    trabajoPractico: [
+                        "Definí qué es el armado de valijas y su importancia.",
+                        "Nombrá 5 factores a considerar con ejemplo de cada uno.",
+                        "Resumí las etapas principales del proceso de armado.",
+                        "Redactá lista básica para 5 a 7 días (prendas, calzado, accesorios).",
+                        "Nombrá 3 consejos prácticos de optimización.",
+                        "Explicá al menos 3 beneficios.",
+                        "Caso aplicado: cliente en viaje de negocios (clima templado, 7 días) → 3 recomendaciones concretas de prendas y accesorios."
+                    ],
+                    fraseCierre: "Viajar con estilo no depende de la cantidad de ropa, sino de la estrategia con la que armás tu valija."
+                },
+                {
+                    id: 16,
+                    titulo: "La moda es un espejo de la sociedad y su evolución en el tiempo",
+                    resumen: "La historia de la moda refleja la evolución de las sociedades, sus valores, tecnologías y expresiones culturales desde la prehistoria hasta la actualidad.",
+                    contenido: `Introducción
+
+La historia de la moda refleja la evolución de las sociedades, sus valores, tecnologías y expresiones culturales. Desde la prehistoria hasta la actualidad, la vestimenta ha sido identidad, estatus y un lenguaje visual de cada época.
+
+Orígenes
+
+• Prehistoria → pieles y fibras vegetales, adornos como collares.
+• Antigüedad → chitones griegos, togas romanas, kalasiris egipcio.
+• Función: protección, diferenciación social, estética.
+
+Edad Media
+
+• Vestimenta larga y superpuesta.
+• Influencia de la Iglesia.
+• Houppelandes, hennin, colores intensos para nobleza.
+
+Renacimiento
+
+• Siluetas estructuradas, terciopelo, brocado.
+• Cuellos altos, gorgueras.
+• Introducción de patrones y sastrería.
+
+Barroco y Rococó
+
+• Barroco → opulencia, casacas bordadas, pelucas empolvadas.
+• Rococó → estilo más ligero, colores pasteles, vestidos robe à la française.
+
+Siglo XIX
+
+• Neoclasicismo → vestidos de cintura alta.
+• Romanticismo → faldas voluminosas, mangas pagoda.
+• Era Victoriana → polisón, corsés, Charles Worth y alta costura.
+
+Siglo XX
+
+• 1900-1914 → Belle Époque, silueta en S, sombreros grandes.
+• 1920s → flapper, vestidos rectos, Coco Chanel.
+• 1930-40s → glamour Hollywood, estilo militar, Dior New Look.
+• 1950s → feminidad exagerada, cinturas ceñidas.
+• 1960s → minifaldas, psicodelia, movimiento hippie.
+• 1970s → boho, punk, disco.
+• 1980s → hombreras, power dressing.
+• 1990s → minimalismo, grunge.
+• 2000s → logomanía, moda rápida.
+
+Moda contemporánea
+
+• 2010-2025: sostenibilidad, moda sin género, oversize.
+• Influencia de redes sociales e influencers.
+• Tecnología (tejidos inteligentes, impresión 3D).
+• Inclusividad y diversidad.
+
+Impacto cultural
+
+• Identidad: género, clase, etnia, subculturas.
+• Economía: motor global de la industria textil.
+• Movimientos sociales y culturales marcan tendencias.`,
+                    trabajoPractico: [
+                        "Explicá por qué la historia de la moda es clave para comprender la asesoría actual.",
+                        "Nombrá un estilo representativo del Barroco, Rococó y Era Victoriana, explicando cómo reflejaban su sociedad.",
+                        "Seleccioná dos décadas del siglo XX y explicá cómo influyeron los cambios sociales en la moda.",
+                        "Nombrá 3 características de la moda contemporánea (2010-2025).",
+                        "Caso aplicado: cliente que quiere un guardarropas moderno inspirado en los años 70 → 3 prendas/accesorios que debería incluir."
+                    ],
+                    fraseCierre: "Conocer la historia de la moda es entender cómo cada época dejó su huella en nuestra forma de vestir hoy."
+                },
+                {
+                    id: 17,
+                    titulo: "El rol del asesor de imagen: proyectar confianza, coherencia y autenticidad",
+                    resumen: "Es un profesional que ayuda a mejorar la apariencia y estilo personal para proyectar una imagen coherente y efectiva, abarcando vestimenta, cuidado personal, comunicación no verbal y etiqueta social.",
+                    contenido: `¿Qué es un asesor de imagen?
+
+Es un profesional que ayuda a mejorar la apariencia y estilo personal para proyectar una imagen coherente y efectiva.
+• Abarca vestimenta, cuidado personal, comunicación no verbal y etiqueta social.
+• Su meta es alinear la imagen con los objetivos personales y profesionales del cliente.
+• En la actualidad, donde la primera impresión es clave, su rol es fundamental.
+
+Etapas del proceso de asesoramiento
+
+• Consulta inicial → generar confianza, escuchar necesidades y definir expectativas.
+• Análisis de la imagen actual → observar vestimenta, peinado, lenguaje corporal, revisar guardarropas.
+• Identificación de objetivos → establecer metas claras y priorizar necesidades.
+• Creación del plan personalizado → propuestas de vestimenta, peinado, cuidado personal, comunicación no verbal y etiqueta.
+• Implementación → compras, estilistas, sesiones prácticas de comunicación, seguimiento y ajustes.
+
+Ética profesional
+
+• Confidencialidad → proteger la información del cliente.
+• Respeto y empatía → trato sin juicios y con sensibilidad.
+• Honestidad → establecer expectativas realistas.
+• Actualización constante → mantenerse al día con tendencias y técnicas.
+
+Casos prácticos
+
+• Ejecutiva en ascenso → actualización de guardarropas, peinado estructurado, entrenamiento en lenguaje corporal. Resultado: mayor autoridad y confianza.
+• Cliente en evento formal → traje a medida, accesorios y consejos de etiqueta. Resultado: elogios y seguridad en su presentación.
+
+Recursos adicionales
+
+• Libros: Dress Your Best (Clinton Kelly y Stacy London), The Power of Style (Annette Bond).
+• Sitios web: AICI, Fashionista.com.
+• Cursos online: teoría del color, análisis de estilo, comunicación no verbal.`,
+                    trabajoPractico: [
+                        "Definí en 5 a 7 líneas qué es un asesor de imagen y por qué es clave hoy.",
+                        "Nombrá las 5 etapas del proceso y explicá brevemente cada una.",
+                        "Describí 3 principios éticos fundamentales y cómo aplicarlos.",
+                        "Caso aplicado: sos asesor/a y recibís un cliente que quiere mejorar su imagen profesional → pasos y cambios recomendados."
+                    ],
+                    fraseCierre: "El trabajo del asesor de imagen no es cambiar a las personas, sino ayudarlas a mostrar lo mejor de sí mismas con autenticidad y confianza."
+                }
+            ],
+            extras: {
+                agendaSemanal: {
+                    titulo: "Agenda Semanal de Imagen Personal",
+                    subtitulo: "Pequeños pasos cada día para reflejar tu mejor versión",
+                    estructura: {
+                        lunes: ["Objetivo de imagen para hoy", "Cómo me percibí", "Comentario de alguien"],
+                        martes: ["Objetivo de imagen", "Situación que reforzó mi seguridad", "Algo a mejorar"],
+                        miercoles: ["Objetivo de imagen", "Cómo proyecté mi comunicación", "Reflexión breve"],
+                        jueves: ["Objetivo de imagen", "Mi postura y lenguaje corporal fueron", "Nota personal"],
+                        viernes: ["Objetivo de imagen", "Logro de la semana", "Comentario de autoevaluación"]
+                    },
+                    checklist: ["Vestimenta acorde a mis objetivos", "Postura y actitud segura", "Comunicación coherente", "Presencia digital alineada"],
+                    frase: "La constancia en los pequeños detalles transforma tu imagen."
+                },
+                checklistImagen: {
+                    titulo: "Checklist de Imagen Personal",
+                    items: ["Vestimenta acorde", "Postura", "Coherencia en redes", "Lenguaje corporal"],
+                    notasDia: true
+                },
+                diarioReflexiones: {
+                    titulo: "Diario de Reflexiones",
+                    prompts: ["Hoy me percibí como...", "Otros me dijeron que...", "Aprendí que..."]
+                },
+                plantillaObjetivos: {
+                    titulo: "Plantilla de Objetivos",
+                    areas: ["Personal", "Profesional", "Digital"],
+                    plazos: ["Corto plazo", "Mediano plazo", "Largo plazo"]
+                }
+            }
+        };
+
+        // App State
+        let currentView = 'welcome';
+        let progress = {};
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // Check if already authenticated
+            const isAuthenticated = localStorage.getItem('escuela_authenticated') === 'true';
+            
+            if (isAuthenticated) {
+                showMainContent();
+            }
+
+            // Load progress immediately
+            loadProgress();
+
+            // Setup event listeners
+            setupEventListeners();
+
+            // Log modules for debugging
+            console.log('Módulos cargados (17):', courseData.modulos.map(m => `${m.id} ${m.titulo.split(':')[0]}`));
+        }
+
+        function setupEventListeners() {
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Export button
+            document.getElementById('exportBtn').addEventListener('click', exportProgress);
+            
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (password === 'Miescuela123') {
+                localStorage.setItem('escuela_authenticated', 'true');
+                showMainContent();
+                errorDiv.classList.add('hidden');
+            } else {
+                errorDiv.textContent = 'Contraseña incorrecta. La contraseña es: Miescuela123';
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('escuela_authenticated');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('password').value = '';
+        }
+
+        function showMainContent() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            renderSidebar();
+            updateProgressStats();
+        }
+
+        function renderSidebar() {
+            // Render modules list
+            const modulesList = document.getElementById('modulesList');
+            modulesList.innerHTML = courseData.modulos.map(modulo => `
+                <button
+                    onclick="showModule(${modulo.id})"
+                    class="w-full text-left p-3 rounded-lg font-inter text-sm transition-colors hover:bg-gray-50 text-negro module-btn"
+                    data-module="${modulo.id}"
+                >
+                    <div class="flex items-center justify-between">
+                        <span>Módulo ${modulo.id}</span>
+                        ${progress[`modulo_${modulo.id}_completo`] ? '<span class="text-xs text-green-600">✓</span>' : ''}
+                    </div>
+                </button>
+            `).join('');
+
+            // Render extras list
+            const extrasList = document.getElementById('extrasList');
+            extrasList.innerHTML = Object.keys(courseData.extras).map(extraKey => `
+                <button
+                    onclick="showExtra('${extraKey}')"
+                    class="w-full text-left p-3 rounded-lg font-inter text-sm transition-colors hover:bg-gray-50 text-negro extra-btn"
+                    data-extra="${extraKey}"
+                >
+                    ${courseData.extras[extraKey].titulo}
+                </button>
+            `).join('');
+        }
+
+        function showModule(moduleId) {
+            const modulo = courseData.modulos.find(m => m.id === moduleId);
+            if (!modulo) return;
+
+            // Update active states
+            document.querySelectorAll('.module-btn, .extra-btn').forEach(btn => {
+                btn.classList.remove('bg-bordeaux', 'text-white', 'bg-dorado');
+                btn.classList.add('hover:bg-gray-50', 'text-negro');
+            });
+            
+            document.querySelector(`[data-module="${moduleId}"]`).classList.add('bg-bordeaux', 'text-white');
+            document.querySelector(`[data-module="${moduleId}"]`).classList.remove('hover:bg-gray-50', 'text-negro');
+
+            // Hide welcome screen
+            document.getElementById('welcomeScreen').classList.add('hidden');
+
+            // Get saved notes for this module
+            const savedNotes = progress[`modulo_${moduleId}_notas`] || '';
+
+            // Render module content
+            const dynamicContent = document.getElementById('dynamicContent');
+            dynamicContent.innerHTML = `
+                <div class="bg-white rounded-lg shadow-sm p-8">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="flex-1">
+                            <h1 class="font-playfair text-2xl md:text-3xl font-bold text-negro mb-2">
+                                Módulo ${modulo.id}
+                            </h1>
+                            <h2 class="font-playfair text-xl text-bordeaux mb-4">
+                                ${modulo.titulo}
+                            </h2>
+                        </div>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                ${progress[`modulo_${modulo.id}_completo`] ? 'checked' : ''}
+                                onchange="toggleModuleComplete(${modulo.id})"
+                                class="w-5 h-5 text-bordeaux rounded focus:ring-bordeaux"
+                            />
+                            <span class="font-inter text-sm text-negro">Completado</span>
+                        </label>
+                    </div>
+
+                    ${modulo.resumen ? `
+                    <div class="mb-8 p-4 bg-beige bg-opacity-50 rounded-lg">
+                        <h3 class="font-inter font-semibold text-negro mb-2">Resumen</h3>
+                        <p class="font-inter text-gray-700">${modulo.resumen}</p>
+                    </div>
+                    ` : ''}
+
+                    <div class="mb-8">
+                        <h3 class="font-playfair text-xl font-semibold text-negro mb-4">Contenido</h3>
+                        <div class="prose prose-lg max-w-none font-inter text-gray-700">
+                            ${modulo.contenido.replace(/\n\n/g, '</p><p class="mb-4">').replace(/\n/g, '<br>').replace(/^/, '<p class="mb-4">').replace(/$/, '</p>')}
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <h3 class="font-playfair text-xl font-semibold text-negro mb-4">Trabajo Práctico</h3>
+                        <div class="space-y-4">
+                            ${modulo.trabajoPractico.map((pregunta, index) => `
+                                <div class="p-4 border border-gray-200 rounded-lg">
+                                    <p class="font-inter font-medium text-negro mb-2">
+                                        ${index + 1}. ${pregunta}
+                                    </p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <h3 class="font-playfair text-xl font-semibold text-negro mb-4">Mis respuestas / notas</h3>
+                        <textarea
+                            id="moduleNotes_${modulo.id}"
+                            placeholder="Escribí tus respuestas y notas aquí..."
+                            class="w-full h-32 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bordeaux focus:border-transparent font-inter resize-vertical"
+                        >${savedNotes}</textarea>
+                    </div>
+
+                    <div class="border-t border-gray-200 pt-6">
+                        <blockquote class="font-playfair text-lg italic text-bordeaux text-center">
+                            "${modulo.fraseCierre}"
+                        </blockquote>
+                    </div>
+                </div>
+            `;
+
+            // Add event listener for immediate saving
+            const textarea = document.getElementById(`moduleNotes_${modulo.id}`);
+            textarea.addEventListener('input', function() {
+                updateModuleNotes(modulo.id, this.value);
+            });
+
+            currentView = 'module';
+        }
+
+        function showExtra(extraKey) {
+            const extra = courseData.extras[extraKey];
+            if (!extra) return;
+
+            // Update active states
+            document.querySelectorAll('.module-btn, .extra-btn').forEach(btn => {
+                btn.classList.remove('bg-bordeaux', 'text-white', 'bg-dorado', 'text-negro');
+                btn.classList.add('hover:bg-gray-50', 'text-negro');
+            });
+            
+            document.querySelector(`[data-extra="${extraKey}"]`).classList.add('bg-dorado', 'text-negro');
+            document.querySelector(`[data-extra="${extraKey}"]`).classList.remove('hover:bg-gray-50');
+
+            // Hide welcome screen
+            document.getElementById('welcomeScreen').classList.add('hidden');
+
+            // Render extra content
+            const dynamicContent = document.getElementById('dynamicContent');
+            
+            if (extraKey === 'agendaSemanal') {
+                dynamicContent.innerHTML = renderAgendaSemanal(extra, extraKey);
+            } else if (extraKey === 'checklistImagen') {
+                dynamicContent.innerHTML = renderChecklistImagen(extra, extraKey);
+            } else if (extraKey === 'diarioReflexiones') {
+                dynamicContent.innerHTML = renderDiarioReflexiones(extra, extraKey);
+            } else if (extraKey === 'plantillaObjetivos') {
+                dynamicContent.innerHTML = renderPlantillaObjetivos(extra, extraKey);
+            }
+
+            currentView = 'extra';
+        }
+
+        function renderAgendaSemanal(extra, extraKey) {
+            return `
+                <div class="bg-white rounded-lg shadow-sm p-8">
+                    <h1 class="font-playfair text-2xl md:text-3xl font-bold text-negro mb-2">
+                        ${extra.titulo}
+                    </h1>
+                    <p class="font-inter text-bordeaux mb-8">${extra.subtitulo}</p>
+
+                    <div class="space-y-6">
+                        ${Object.entries(extra.estructura).map(([dia, campos]) => `
+                            <div class="border border-gray-200 rounded-lg p-6">
+                                <h3 class="font-playfair text-lg font-semibold text-negro mb-4 capitalize">
+                                    🌸 ${dia}
+                                </h3>
+                                <div class="space-y-4">
+                                    ${campos.map((campo, index) => `
+                                        <div>
+                                            <label class="block font-inter text-sm font-medium text-gray-700 mb-1">
+                                                🔹 ${campo}:
+                                            </label>
+                                            <input
+                                                type="text"
+                                                value="${getExtraData(extraKey, `${dia}_${index}`)}"
+                                                oninput="setExtraData('${extraKey}', '${dia}_${index}', this.value)"
+                                                class="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-bordeaux focus:border-transparent font-inter text-sm"
+                                                placeholder="____________"
+                                            />
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="mt-8 p-6 bg-beige bg-opacity-50 rounded-lg">
+                        <h3 class="font-inter font-semibold text-negro mb-4">✅ Checklist diario</h3>
+                        <div class="space-y-2">
+                            ${extra.checklist.map((item, index) => `
+                                <label class="flex items-center gap-3">
+                                    <input
+                                        type="checkbox"
+                                        ${getExtraData(extraKey, `checklist_${index}`) === 'true' ? 'checked' : ''}
+                                        onchange="setExtraData('${extraKey}', 'checklist_${index}', this.checked.toString())"
+                                        class="w-4 h-4 text-bordeaux rounded focus:ring-bordeaux"
+                                    />
+                                    <span class="font-inter text-sm text-negro">✔ ${item}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="mt-8 p-6 bg-gradient-to-r from-dorado/10 to-bordeaux/10 rounded-lg text-center">
+                        <p class="font-playfair text-lg italic text-bordeaux">
+                            🌈 "${extra.frase}"
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderChecklistImagen(extra, extraKey) {
+            return `
+                <div class="bg-white rounded-lg shadow-sm p-8">
+                    <h1 class="font-playfair text-2xl md:text-3xl font-bold text-negro mb-6">
+                        ${extra.titulo}
+                    </h1>
+
+                    <div class="mb-8">
+                        <h3 class="font-inter font-semibold text-negro mb-4">Elementos diarios</h3>
+                        <div class="space-y-3">
+                            ${extra.items.map((item, index) => `
+                                <label class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50">
+                                    <input
+                                        type="checkbox"
+                                        ${getExtraData(extraKey, `item_${index}`) === 'true' ? 'checked' : ''}
+                                        onchange="setExtraData('${extraKey}', 'item_${index}', this.checked.toString())"
+                                        class="w-5 h-5 text-bordeaux rounded focus:ring-bordeaux"
+                                    />
+                                    <span class="font-inter font-medium text-negro">✔ ${item}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <h3 class="font-inter font-semibold text-negro mb-4">Notas del día</h3>
+                        <textarea
+                            value="${getExtraData(extraKey, 'notas_dia')}"
+                            oninput="setExtraData('${extraKey}', 'notas_dia', this.value)"
+                            placeholder="Escribí aquí tus reflexiones del día..."
+                            class="w-full h-24 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bordeaux focus:border-transparent font-inter resize-vertical"
+                        ></textarea>
+                    </div>
+
+                    <div class="text-center">
+                        <button
+                            onclick="resetChecklist('${extraKey}')"
+                            class="bg-gray-500 hover:bg-gray-600 text-white font-inter font-medium py-2 px-4 rounded-lg text-sm transition-colors duration-200"
+                        >
+                            Resetear día
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDiarioReflexiones(extra, extraKey) {
+            return `
+                <div class="bg-white rounded-lg shadow-sm p-8">
+                    <h1 class="font-playfair text-2xl md:text-3xl font-bold text-negro mb-6">
+                        ${extra.titulo}
+                    </h1>
+
+                    <div class="mb-6">
+                        <label class="block font-inter font-medium text-negro mb-2">
+                            Fecha
+                        </label>
+                        <input
+                            type="date"
+                            value="${getExtraData(extraKey, 'fecha') || new Date().toISOString().split('T')[0]}"
+                            onchange="setExtraData('${extraKey}', 'fecha', this.value)"
+                            class="px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-bordeaux focus:border-transparent font-inter"
+                        />
+                    </div>
+
+                    <div class="space-y-6">
+                        ${extra.prompts.map((prompt, index) => `
+                            <div>
+                                <label class="block font-inter font-medium text-negro mb-2">
+                                    ${prompt}
+                                </label>
+                                <textarea
+                                    value="${getExtraData(extraKey, `prompt_${index}`)}"
+                                    oninput="setExtraData('${extraKey}', 'prompt_${index}', this.value)"
+                                    placeholder="Escribí tu reflexión aquí..."
+                                    class="w-full h-20 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bordeaux focus:border-transparent font-inter resize-vertical"
+                                ></textarea>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="mt-8 p-6 bg-beige bg-opacity-50 rounded-lg">
+                        <p class="font-inter text-sm text-gray-600 italic">
+                            💡 Tip: Usar este diario diariamente ayuda a comparar tu imagen proyectada vs. la percibida por otros.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderPlantillaObjetivos(extra, extraKey) {
+            return `
+                <div class="bg-white rounded-lg shadow-sm p-8">
+                    <h1 class="font-playfair text-2xl md:text-3xl font-bold text-negro mb-6">
+                        ${extra.titulo}
+                    </h1>
+
+                    <div class="space-y-8">
+                        ${extra.areas.map(area => `
+                            <div class="border border-gray-200 rounded-lg p-6">
+                                <h3 class="font-playfair text-xl font-semibold text-bordeaux mb-4">
+                                    🎯 ${area}
+                                </h3>
+                                <div class="grid md:grid-cols-3 gap-4">
+                                    ${extra.plazos.map(plazo => `
+                                        <div>
+                                            <label class="block font-inter font-medium text-negro mb-2">
+                                                ${plazo}
+                                            </label>
+                                            <textarea
+                                                value="${getExtraData(extraKey, `${area.toLowerCase()}_${plazo.toLowerCase().replace(' ', '_')}`)}"
+                                                oninput="setExtraData('${extraKey}', '${area.toLowerCase()}_${plazo.toLowerCase().replace(' ', '_')}', this.value)"
+                                                placeholder="Define tu objetivo..."
+                                                class="w-full h-20 p-3 border border-gray-300 rounded focus:ring-2 focus:ring-bordeaux focus:border-transparent font-inter text-sm resize-vertical"
+                                            ></textarea>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="mt-8 p-6 bg-gradient-to-r from-dorado/10 to-bordeaux/10 rounded-lg">
+                        <h3 class="font-inter font-semibold text-negro mb-4">📊 Seguimiento de progreso</h3>
+                        <div class="space-y-3">
+                            ${extra.areas.map(area => `
+                                <div class="flex items-center justify-between">
+                                    <span class="font-inter text-negro">${area}:</span>
+                                    <select
+                                        value="${getExtraData(extraKey, `progreso_${area.toLowerCase()}`)}"
+                                        onchange="setExtraData('${extraKey}', 'progreso_${area.toLowerCase()}', this.value)"
+                                        class="px-3 py-1 border border-gray-300 rounded focus:ring-2 focus:ring-bordeaux focus:border-transparent font-inter text-sm"
+                                    >
+                                        <option value="">Seleccionar</option>
+                                        <option value="iniciado">Iniciado</option>
+                                        <option value="progreso">En progreso</option>
+                                        <option value="completado">Completado</option>
+                                    </select>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleModuleComplete(moduleId) {
+            progress[`modulo_${moduleId}_completo`] = !progress[`modulo_${moduleId}_completo`];
+            saveProgress();
+            updateProgressStats();
+            renderSidebar(); // Update sidebar to show/hide checkmarks
+        }
+
+        function updateModuleNotes(moduleId, notes) {
+            progress[`modulo_${moduleId}_notas`] = notes;
+            saveProgress();
+        }
+
+        function getExtraData(extraKey, key) {
+            return progress[`extra_${extraKey}_${key}`] || '';
+        }
+
+        function setExtraData(extraKey, key, value) {
+            progress[`extra_${extraKey}_${key}`] = value;
+            saveProgress();
+        }
+
+        function resetChecklist(extraKey) {
+            const extra = courseData.extras[extraKey];
+            if (extra && extra.items) {
+                extra.items.forEach((item, index) => {
+                    delete progress[`extra_${extraKey}_item_${index}`];
+                });
+                delete progress[`extra_${extraKey}_notas_dia`];
+                saveProgress();
+                showExtra(extraKey); // Refresh the view
+            }
+        }
+
+        function loadProgress() {
+            try {
+                const stored = localStorage.getItem('escuela_progreso');
+                if (stored) {
+                    progress = JSON.parse(stored);
+                }
+            } catch (error) {
+                console.error('Error al cargar progreso:', error);
+                progress = {};
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem('escuela_progreso', JSON.stringify(progress));
+                showSavedIndicator();
+            } catch (error) {
+                console.error('Error al guardar progreso:', error);
+            }
+        }
+
+        function showSavedIndicator() {
+            const indicator = document.getElementById('savedIndicator');
+            indicator.classList.remove('hidden');
+            indicator.classList.add('flex');
+            
+            setTimeout(() => {
+                indicator.classList.add('hidden');
+                indicator.classList.remove('flex');
+            }, 2000);
+        }
+
+        function updateProgressStats() {
+            const completedCount = courseData.modulos.filter(m => progress[`modulo_${m.id}_completo`]).length;
+            const progressPercent = Math.round((completedCount / courseData.modulos.length) * 100);
+
+            const completedElement = document.getElementById('completedCount');
+            const progressElement = document.getElementById('progressPercent');
+
+            if (completedElement) completedElement.textContent = completedCount;
+            if (progressElement) progressElement.textContent = progressPercent + '%';
+        }
+
+        function exportProgress() {
+            try {
+                let content = `PROGRESO - ESCUELA ASESORES DE IMAGEN\n`;
+                content += `Fecha: ${new Date().toLocaleDateString('es-ES')}\n`;
+                content += `\n=================================================\n\n`;
+                
+                // Modules progress
+                content += `PROGRESO DE MÓDULOS\n`;
+                content += `====================\n\n`;
+                
+                courseData.modulos.forEach(modulo => {
+                    content += `MÓDULO ${modulo.id}: ${modulo.titulo}\n`;
+                    content += `Estado: ${progress[`modulo_${modulo.id}_completo`] ? 'Completado ✓' : 'Pendiente'}\n`;
+                    const notes = progress[`modulo_${modulo.id}_notas`] || '';
+                    content += `Notas: ${notes || 'Sin notas'}\n`;
+                    content += `\n`;
+                });
+
+                // Extras section
+                content += `\nEXTRAS INTERACTIVOS\n`;
+                content += `===================\n\n`;
+
+                // Agenda Semanal
+                content += `AGENDA SEMANAL\n`;
+                content += `--------------\n`;
+                Object.entries(courseData.extras.agendaSemanal.estructura).forEach(([dia, campos]) => {
+                    content += `${dia.toUpperCase()}:\n`;
+                    campos.forEach((campo, i) => {
+                        const valor = getExtraData('agendaSemanal', `${dia}_${i}`) || 'No completado';
+                        content += `  ${campo}: ${valor}\n`;
+                    });
+                    content += `\n`;
+                });
+
+                // Checklist
+                content += `CHECKLIST DE IMAGEN PERSONAL\n`;
+                content += `-----------------------------\n`;
+                courseData.extras.checklistImagen.items.forEach((item, index) => {
+                    const checked = getExtraData('checklistImagen', `item_${index}`) === 'true' ? '✓' : '✗';
+                    content += `${checked} ${item}\n`;
+                });
+                const checklistNotes = getExtraData('checklistImagen', 'notas_dia');
+                if (checklistNotes) {
+                    content += `Notas del día: ${checklistNotes}\n`;
+                }
+                content += `\n`;
+
+                // Diario de Reflexiones
+                content += `DIARIO DE REFLEXIONES\n`;
+                content += `---------------------\n`;
+                const diarioFecha = getExtraData('diarioReflexiones', 'fecha');
+                if (diarioFecha) {
+                    content += `Fecha: ${diarioFecha}\n`;
+                }
+                courseData.extras.diarioReflexiones.prompts.forEach((prompt, index) => {
+                    const respuesta = getExtraData('diarioReflexiones', `prompt_${index}`) || 'Sin respuesta';
+                    content += `${prompt} ${respuesta}\n`;
+                });
+                content += `\n`;
+
+                // Plantilla de Objetivos
+                content += `PLANTILLA DE OBJETIVOS\n`;
+                content += `----------------------\n`;
+                courseData.extras.plantillaObjetivos.areas.forEach(area => {
+                    content += `${area.toUpperCase()}:\n`;
+                    courseData.extras.plantillaObjetivos.plazos.forEach(plazo => {
+                        const objetivo = getExtraData('plantillaObjetivos', `${area.toLowerCase()}_${plazo.toLowerCase().replace(' ', '_')}`) || 'No definido';
+                        content += `  ${plazo}: ${objetivo}\n`;
+                    });
+                    const progreso = getExtraData('plantillaObjetivos', `progreso_${area.toLowerCase()}`) || 'No definido';
+                    content += `  Progreso: ${progreso}\n`;
+                    content += `\n`;
+                });
+
+                // Create and download file
+                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                const fecha = new Date().toISOString().split('T')[0];
+                const fileName = `Progreso_EscuelaAsesoresImagen_${fecha}.txt`;
+                
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+            } catch (error) {
+                console.error('Error al exportar:', error);
+                alert('Error al generar el archivo. Por favor, inténtalo nuevamente.');
+            }
+        }
+    </script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDprrYndV3DTv%2FJMPCeBk1HkR9pw1vib5Jh0v2DMrCGS4ikZ71%2BIBAKf5pfmh2pmJxuXnGnxGG5gEfmaLxqmvT3O5navfO3oEC%2B3cuubqRzemkDrUvS0SsL4B9EaEOYcjZ6jM%2FvjUdRiPJGowoszoNxRHF%2B%2BV7Rz2JBoICyqJP%2FbejD4cPlHDrw4Yq2Qjm8z%2BgFdMQ9EI6zCxp44F7Ys9XevDw8MzrPjpOmssNvqN7eSrN0GCUqTwEPdTgTIPoZRdu9BLeAX9onslJrEX7SzF81yjezvzhXbSpMrSMwfvR04intUWMPEoIqgPGkc%2BpriLbGoKJI8NbsiZoRod1Y298ZlMj7KZoa%2BtVA9cHjvUmeO19c3rueVsb%2FZPYAwCR5YsGox3hTZtwMqgvocLvOLQc1IfeDtGWaj6PibstTlhjq8FF3bEHVLx9CwxU%2BiaPIhITE0NNFpKCyYuuTaQmKgp3YHR0Ty4fYl8i1xQ48JLEorwMrSA%2BDisvVLEs4qkFUMFUajxXy4wkLIQbfo5Lh5Kz50%3D";
+        window.__genspark_locale = "es-ES";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDprrYndV3DTv/JMPCeBk1HkR9pw1vib5Jh0v2DMrCGS4ikZ71+IBAKf5pfmh2pmJxuXnGnxGG5gEfmaLxqmvT3O5navfO3oEC+3cuubqRzemkDrUvS0SsL4B9EaEOYcjZ6jM/vjUdRiPJGowoszoNxRHF++V7Rz2JBoICyqJP/bejD4cPlHDrw4Yq2Qjm8z+gFdMQ9EI6zCxp44F7Ys9XevDw8MzrPjpOmssNvqN7eSrN0GCUqTwEPdTgTIPoZRdu9BLeAX9onslJrEX7SzF81yjezvzhXbSpMrSMwfvR04intUWMPEoIqgPGkc+priLbGoKJI8NbsiZoRod1Y298ZlMj7KZoa+tVA9cHjvUmeO19c3rueVsb/ZPYAwCR5YsGox3hTZtwMqgvocLvOLQc1IfeDtGWaj6PibstTlhjq8FF3bEHVLx9CwxU+iaPIhITE0NNFpKCyYuuTaQmKgp3YHR0Ty4fYl8i1xQ48JLEorwMrSA+DisvVLEs4qkFUMFUajxXy4wkLIQbfo5Lh5Kz50=";
+    </script>
+    
+    <script id="html_notice_dialog_script" src="https://www.genspark.ai/notice_dialog.js"></script>
+    
